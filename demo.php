@@ -1,10 +1,10 @@
 <?php
 
-require_once dirname(__DIR__) . '/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 use tekintian\phpenv\Env;
 
-Env::load(dirname(__DIR__), '.env');
+Env::load(__DIR__, '.env');
 
 // $app_url = env("APP_URL", "");
 $app_url = Env::get("APP_URL", "http://localhost"); // http://localhost:8080

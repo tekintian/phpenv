@@ -2,6 +2,7 @@
 
 namespace tekintian\phpenv;
 
+use Dotenv\Dotenv;
 use Dotenv\Repository\Adapter\PutenvAdapter;
 use Dotenv\Repository\RepositoryBuilder;
 use PhpOption\Option;

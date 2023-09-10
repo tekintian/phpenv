@@ -8,7 +8,9 @@ php环境下 evn环境解析处理工具类库,
 
 ## 使用方法： 
 
-1. 安装类库
+### Composer 方式
+
+1. Composer安装类库
 
    ~~~sh
    # 加载env类库
@@ -21,13 +23,15 @@ php环境下 evn环境解析处理工具类库,
 
 2. 加载env环境配置文件和使用示例
 
+   注意 当前的入口文件位于 public 下，
+
    ~~~php
    # 在你的项目的入口中增加
    require_once dirname(__DIR__) . '/vendor/autoload.php';
    
    use tekintian\phpenv\Env;
    # 加载环境变量配置文件 注意第一个参数为env环境配置文件的路径， 第二个参数为环境配置文件名mor  .env
-   Env::load(__DIR__, '.env');
+   Env::load(dirname(__DIR__), '.env');
    
    # 使用自定义助手函数获取配置
    // $app_url = env("APP_URL", "");
@@ -38,10 +42,10 @@ php环境下 evn环境解析处理工具类库,
    var_dump($app_url);
    
    ~~~
+
    
-   
-   
-2. .env 环境配置文件参考示例
+
+3. .env 环境配置文件参考示例
 
    ~~~env
    APP_NAME=Laravel
@@ -49,8 +53,7 @@ php环境下 evn环境解析处理工具类库,
    APP_DEBUG=true
    APP_URL=http://localhost
    ~~~
-   
-   
+
 
 
 
@@ -77,36 +80,100 @@ if (!function_exists('env')) {
 
 
 
+## 演示
+
+- 目录结构
+
+~~~txt
+├── composer.json
+├── composer.lock
+├── helper 帮助目录
+│   └── helper.php
+├── public 公共目录
+│   └── index.php  入口文件
+└── vendor 供应商目录
+    ├── autoload.php
+    ├── composer
+    ├── graham-campbell
+    ├── phpoption
+    ├── symfony
+    ├── tekintian
+    └── vlucas
+~~~
 
 
-## 使用示例
 
-注意使用前需要再程序的入口中加载 env环境配置文件一次
+- public/index.php 入口文件
 
 ~~~php
 <?php
-// composer 自动加载
+  
+// composer自动加载
 require_once dirname(__DIR__) . '/vendor/autoload.php';
-
+  
+// 加载helper函数
+require_once dirname(__DIR__) . '/helper/helper.php';
+  
 use tekintian\phpenv\Env;
-
-// 加载环境配置 第一参数为环境配置文件所在路径， 第二个参数为配置环境名称
-Env::load(__DIR__, '.env');
-
+  
+// 加载.env配置文件
+Env::load(dirname(__DIR__), '.env');
+  
 // 使用助手函数获取环境配置
 // $app_url = env("APP_URL", "");
 
 // 直接使用Env对象获取配置
-$app_url = Env::get("APP_URL", "http://localhost");
-
-// 输出 http://localhost:8080
-var_dump($app_url);
+$app_url = Env::get("APP_URL", "未知");
+  
+echo sprintf("Env环境变量<br>APP_URL=%s <br>APP_NAME=%s", $app_url, env('APP_NAME'));
 
 ~~~
 
 
 
-env函数使用示例：
+helper/helper.php 文件
+
+~~~php
+<?php
+
+use tekintian\phpenv\Env;
+
+if (!function_exists('env')) {
+	/**
+	 * Gets the value of an environment variable.
+	 *
+	 * @param  string  $key
+	 * @param  mixed  $default
+	 * @return mixed
+	 */
+	function env($key, $default = null) {
+		return Env::get($key, $default);
+	}
+}
+~~~
+
+
+
+- 运行演示
+
+~~~sh
+# 进入项目根目录执行 
+php -S localhost:8080 -t public/
+
+# 访问测试地址 看到输出 http://localhost 即表示成功
+http://localhost:8080/index.php
+
+#输出：
+Env环境变量
+APP_URL=http://localhost
+APP_NAME=MyApp
+~~~
+
+
+
+
+
+env函数在配置文件中的使用示例：
 
 ~~~php
 <?php

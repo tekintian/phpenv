@@ -1,6 +1,6 @@
 <?php
 
-namespace tekintian\phpenv;
+namespace App\Support;
 
 use Dotenv\Dotenv;
 use Dotenv\Repository\Adapter\PutenvAdapter;
@@ -8,25 +8,22 @@ use Dotenv\Repository\RepositoryBuilder;
 use PhpOption\Option;
 use RuntimeException;
 
-/**
- * php env 处理工具类封装
- * tekintian@gmail.com
- * http://dev.yunnan.ws
- */
 class Env {
+	protected static $envPath = ROOT_PATH;
+	protected static $envFile = '.env';
 	/**
 	 * Indicates if the putenv adapter is enabled.
 	 *
 	 * @var bool
 	 */
 	protected static $putenv = true;
+
 	/**
 	 * The environment repository instance.
 	 *
 	 * @var \Dotenv\Repository\RepositoryInterface|null
 	 */
 	protected static $repository;
-
 	/**
 	 * [$dotEnv description]
 	 * @var \Dotenv\Dotenv
@@ -35,19 +32,39 @@ class Env {
 	/**
 	 * env文件加载入口
 	 *
-	 * @param  string $env_path [env文件所在的路径]
-	 * @param  string $env_file [evn文件名]
-	 * @return [type]  Dotenv\Dotenv对象
+	 * @author tekintian@gmail.com
+	 * @param  string $env_path [env文件所在的路径 默认 ROOT_PATH ]
+	 * @param  string $env_file [evn文件名 默认 .env ]
+	 * @return [type]   Dotenv\Dotenv
 	 */
-	public static function load($env_path = __DIR__, $env_file = '.env') {
+	public static function load($env_path = null, $env_file = null) {
+		if ($env_path) {
+			static::$envPath = $env_path;
+		}
+		if ($env_file) {
+			static::$envFile = $env_file;
+		}
+
 		if (static::$dotEnv === null) {
 			static::$dotEnv = Dotenv::create(
-				static::getRepository(),
-				$env_path,
-				$env_file
+				static::bduildRepository(),
+				static::$envPath,
+				static::$envFile
 			)->safeLoad();
 		}
 		return static::$dotEnv;
+	}
+	/**
+	 *
+	 * 获取EnvRepository
+	 *
+	 * @return \Dotenv\Repository\RepositoryInterface|null
+	 */
+	public static function getEnvRepo() {
+		if (static::$repository === null) {
+			self::load();
+		}
+		return static::$repository;
 	}
 	/**
 	 * Enable the putenv adapter.
@@ -74,7 +91,7 @@ class Env {
 	 *
 	 * @return \Dotenv\Repository\RepositoryInterface
 	 */
-	public static function getRepository() {
+	public static function bduildRepository() {
 		if (static::$repository === null) {
 			$builder = RepositoryBuilder::createWithDefaultAdapters();
 
@@ -84,7 +101,6 @@ class Env {
 
 			static::$repository = $builder->immutable()->make();
 		}
-
 		return static::$repository;
 	}
 
@@ -118,7 +134,7 @@ class Env {
 	 * @return \PhpOption\Option|\PhpOption\Some
 	 */
 	protected static function getOption($key) {
-		return Option::fromValue(static::getRepository()->get($key))
+		return Option::fromValue(static::getEnvRepo()->get($key))
 			->map(function ($value) {
 				switch (strtolower($value)) {
 				case 'true':
@@ -134,9 +150,11 @@ class Env {
 				case '(null)':
 					return;
 				}
+
 				if (preg_match('/\A([\'"])(.*)\1\z/', $value, $matches)) {
 					return $matches[2];
 				}
+
 				return $value;
 			});
 	}

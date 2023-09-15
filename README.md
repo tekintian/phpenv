@@ -28,10 +28,13 @@ php环境下 evn环境解析处理工具类库,
    ~~~php
    # 在你的项目的入口中增加
    require_once dirname(__DIR__) . '/vendor/autoload.php';
+   # 定义项目根目录
+   define('ROOT_PATH', dirname(__DIR__));
    
    use tekintian\phpenv\Env;
+   # 如果你的.env文件不在项目根路径中，则需要手动执行Env::load加载
    # 加载环境变量配置文件 注意第一个参数为env环境配置文件的路径， 第二个参数为环境配置文件名mor  .env
-   Env::load(dirname(__DIR__), '.env');
+   #Env::load(dirname(__DIR__), '.env');
    
    # 使用自定义助手函数获取配置
    // $app_url = env("APP_URL", "");
@@ -110,14 +113,16 @@ if (!function_exists('env')) {
   
 // composer自动加载
 require_once dirname(__DIR__) . '/vendor/autoload.php';
-  
+# 定义项目根目录
+define('ROOT_PATH', dirname(__DIR__));
+
 // 加载helper函数
 require_once dirname(__DIR__) . '/helper/helper.php';
   
 use tekintian\phpenv\Env;
   
 // 加载.env配置文件
-Env::load(dirname(__DIR__), '.env');
+#Env::load(dirname(__DIR__), '.env');
   
 // 使用助手函数获取环境配置
 // $app_url = env("APP_URL", "");

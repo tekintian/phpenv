@@ -1,6 +1,6 @@
 {
     "name": "tekintian/phpenv",
-    "description": "The phpenv parser and phpoption value package.自己使用的php env操作封装，用于解析.env环境变量",
+    "description": "env操作封装，用于自动加载解析.env环境变量 The phpenv parser and phpoption package for parser and load .env",
     "license": "MIT",
     "homepage": "http://dev.tekin.cn",
     "support": {
@@ -26,5 +26,5 @@
     "config": {
         "sort-packages": true
     },
-    "version":"1.0.0"
+    "version":"1.0.1"
 }

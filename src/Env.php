@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Support;
+namespace tekintian\phpenv;
 
 use Dotenv\Dotenv;
 use Dotenv\Repository\Adapter\PutenvAdapter;
 use Dotenv\Repository\RepositoryBuilder;
 use PhpOption\Option;
 use RuntimeException;
+
+defined('ROOT_PATH') ?: define('ROOT_PATH', dirname(dirname(dirname(dirname(__DIR__)))));
 
 class Env {
 	protected static $envPath = ROOT_PATH;

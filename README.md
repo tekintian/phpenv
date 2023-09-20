@@ -2,7 +2,7 @@
 
 
 
-php环境下 evn环境解析处理工具类库, 
+php环境下 evn环境解析处理工具类库,  支持自定义env文件加载， 自动类型过滤和转换，自动加载等功能。
 
 
 
@@ -28,6 +28,23 @@ php环境下 evn环境解析处理工具类库,
    ~~~php
    # 在你的项目的入口中增加
    require_once dirname(__DIR__) . '/vendor/autoload.php';
+   
+   # 加载自定义env文件
+   # Env::load(dirname(__DIR__), '.env');
+   # 直接使用 env 函数获取，支持默认数据和数据过滤和类型转换
+   $app_url = env("APP_URL");
+   
+   var_dump($app_url);
+   
+   ~~~
+   
+
+ - 1.0.x版本使用方法
+
+   ~~~php
+   
+   # 在你的项目的入口中增加
+   require_once dirname(__DIR__) . '/vendor/autoload.php';
    # 定义项目根目录
    define('ROOT_PATH', dirname(__DIR__));
    
@@ -43,19 +60,18 @@ php环境下 evn环境解析处理工具类库,
    $app_url = Env::get("APP_URL");
    
    var_dump($app_url);
-   
    ~~~
 
    
 
 3. .env 环境配置文件参考示例
 
-   ~~~env
-   APP_NAME=Laravel
-   APP_ENV=local
-   APP_DEBUG=true
-   APP_URL=http://localhost
-   ~~~
+~~~env
+APP_NAME=Laravel
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://localhost
+~~~
 
 
 

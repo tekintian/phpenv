@@ -8,7 +8,7 @@ use Dotenv\Repository\RepositoryBuilder;
 use PhpOption\Option;
 use RuntimeException;
 
-defined('ROOT_PATH') ?: define('ROOT_PATH', dirname(__DIR__, 4));
+// defined('ROOT_PATH') ?: define('ROOT_PATH', dirname(__DIR__, 4));
 
 class Env {
 	protected static $envPath = ROOT_PATH;
@@ -111,38 +111,10 @@ class Env {
 	 *
 	 * @param  string  $key
 	 * @param  mixed  $default
-	 * @param  string  $type default str no value filter, support int, float, bool, url ,ip regexp and string value filter
 	 * @return mixed
 	 */
-	public static function get($key, $default = null, $type = 'str') {
-		$val = self::getOption($key)->getOrCall(fn() => $default instanceof Closure ? $default(...$args) : $default);
-		if ($type == 'str' || null === $val) {
-			return $val;
-		}
-		switch ($type) {
-		case 'int':
-			$val = intval(filter_var($val, FILTER_SANITIZE_NUMBER_INT));
-			break;
-		case 'float':
-			$val = floatval(filter_var($val, FILTER_SANITIZE_NUMBER_FLOAT));
-			break;
-		case 'boolean':
-		case 'bool':
-			$val = boolval(filter_var($val, FILTER_VALIDATE_BOOLEAN));
-			break;
-		case 'url':
-			$val = filter_var($val, FILTER_VALIDATE_URL);
-			break;
-		case 'ip':
-			$val = filter_var($val, FILTER_VALIDATE_IP);
-			break;
-		case 'regexp':
-			$val = filter_var($val, FILTER_VALIDATE_REGEXP);
-			break;
-		default:
-			$val = strval(filter_var($val, FILTER_SANITIZE_STRING));
-		}
-		return $val;
+	public static function get($key, $default = null) {
+		return self::getOption($key)->getOrCall(fn() => $default instanceof Closure ? $default(...$args) : $default);
 	}
 
 	/**

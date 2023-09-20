@@ -36,6 +36,15 @@ php环境下 evn环境解析处理工具类库,  支持自定义env文件加载�
    
    var_dump($app_url);
    
+   
+   # 获取int类型数据
+   $app_port = env("APP_PORT",80,'int');
+   
+   # 获取 bool类型数据
+   $debug = env("APP_DEBUG",false,'bool');
+   
+   # 其他还支持 int, float, bool, url ,ip, regexp, email, domain , string 数据过滤和验证，使用方法类似。
+   
    ~~~
    
 

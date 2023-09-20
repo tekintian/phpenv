@@ -8,7 +8,7 @@ use Dotenv\Repository\RepositoryBuilder;
 use PhpOption\Option;
 use RuntimeException;
 
-defined('ROOT_PATH') ?: define('ROOT_PATH', dirname(dirname(dirname(dirname(__DIR__)))));
+defined('ROOT_PATH') ?: define('ROOT_PATH', dirname(__DIR__, 4));
 
 class Env {
 	protected static $envPath = ROOT_PATH;

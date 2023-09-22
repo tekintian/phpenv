@@ -111,12 +111,42 @@ class Env {
 	 *
 	 * @param  string  $key
 	 * @param  mixed  $default
+	 * @param  string  $type default str no value filter, support int, float, bool, url ,ip regexp and string value filter
 	 * @return mixed
 	 */
-	public static function get($key, $default = null) {
-		return self::getOption($key)->getOrCall(fn() => $default instanceof Closure ? $default(...$args) : $default);
+	public static function get($key, $default = null, $type = 'str') {
+		$val = self::getOption($key)->getOrCall(fn() => $default instanceof Closure ? $default(...$args) : $default);
+		if ($type == 'str' || null === $val) {
+			return $val;
+		}
+		switch ($type) {
+		case 'int':
+			$val = intval(filter_var($val, FILTER_SANITIZE_NUMBER_INT));
+			break;
+		case 'boolean':
+		case 'bool':
+			$val = boolval(filter_var($val, FILTER_VALIDATE_BOOLEAN));
+			break;
+		case 'float':
+			$val = floatval(filter_var($val, FILTER_SANITIZE_NUMBER_FLOAT));
+			break;
+		case 'url':
+			$val = filter_var($val, FILTER_VALIDATE_URL);
+			break;
+		case 'ip':
+			$val = filter_var($val, FILTER_VALIDATE_IP);
+			break;
+		case 'array':
+			$val = array($val);
+			break;
+		case 'regexp':
+			$val = filter_var($val, FILTER_VALIDATE_REGEXP);
+			break;
+		default:
+			$val = strval(filter_var($val, FILTER_SANITIZE_STRING));
+		}
+		return $val;
 	}
-
 	/**
 	 * Get the value of a required environment variable.
 	 *
